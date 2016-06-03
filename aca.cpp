@@ -89,7 +89,7 @@ int main(){
 	//Randomly initialization of epsilon's value
 	float epsilon = 10;
 
-	while(epsilon > 0.001){
+	while(epsilon > 0.001 && k<max_row && k<max_col){
 	
 		cout<<endl<<"Beginning iteration: "<<(k+1)<<endl;
 
@@ -112,15 +112,13 @@ int main(){
 			}
 		}
 	
-		rank++;
-	
 		J.conservativeResize(k+1);
 		J(k) = -1;
 		J(k) = max_index(R.row(I(k)), J, max_col);
 		cout<<endl<<"I:"<<endl<<I<<endl<<endl<<"J:"<<endl<<J<<endl;
 	
-		V.conservativeResize(rank,max_col);
-		U.conservativeResize(max_row,rank);
+		V.conservativeResize(k+1,max_col);
+		U.conservativeResize(max_row,k+1);
 	
 		//Setting index as -1 to avoid random assignments due to resize
 		if(J(k) == -1){
@@ -135,19 +133,24 @@ int main(){
 	
 		U.col(k) = R.col(J(k));
 		cout<<endl<<"V:"<<endl<<V<<endl<<endl<<"U:"<<endl<<U<<endl;
-	
-		z = z + V.row(k).squaredNorm()*U.col(k).squaredNorm() +abs_scalar(U,V,rank);
+		
+		cout<<endl<<"V.row("<<k<<")"<<V.row(k)<<endl<<"U.col("<<k<<")"<<U.col(k)<<endl;
+
+		z = z + V.row(k).squaredNorm()*U.col(k).squaredNorm() +abs_scalar(U,V,k+1);
+
 		cout<<endl<<"Squared Norm: "<<z<<endl;
 	
 		epsilon = (U.col(k).norm()*V.row(k).norm())/sqrt(z);
 		cout<<endl<<"epsilon= "<<epsilon<<endl;
 	
 		cout<<endl<<"Approximate Error Matrix: "<<endl<<R<<endl;
-		cout<<endl<<"V.rows: "<<V.rows()<<endl<<"U.col: "<<U.cols()<<endl<<"rank: "<<rank<<endl;
+		cout<<endl<<"V.rows: "<<V.rows()<<endl<<"U.col: "<<U.cols()<<endl<<"rank: "<<k+1<<endl;
 		cout<<endl<<"Ending iteration: "<<(k+1)<<endl;
 	
 		k++;
 	}
-
+	
+	cout<<endl<<"U*V"<<endl<<U*V<<endl;
+	
 	return 0;
 }
