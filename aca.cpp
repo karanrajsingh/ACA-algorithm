@@ -75,13 +75,12 @@ int main(){
 	MatrixXd R(max_row, max_col);
 
 	long int k = 0;
-	long int rank = 0;
 
 	RowVectorXi I(k);
 	VectorXi J(k);
 
-	MatrixXd U(max_row, rank);
-	MatrixXd V(rank, max_col);
+	MatrixXd U(max_row, k);
+	MatrixXd V(k, max_col);
 
 	Z_approx = MatrixXd::Zero(max_row, max_col);
 	double z = Z_approx.squaredNorm();
