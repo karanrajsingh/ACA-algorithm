@@ -86,9 +86,9 @@ int main(){
 	double z = Z_approx.squaredNorm();
 	
 	//Randomly initialization of epsilon's value
-	float epsilon = 10;
+	float epsilon = -10;
 
-	while(epsilon > 0.001 && k<max_row && k<max_col){
+	while(abs(epsilon) > 0.001 && k<max_row && k<max_col){
 	
 		cout<<endl<<"Beginning iteration: "<<(k+1)<<endl;
 
