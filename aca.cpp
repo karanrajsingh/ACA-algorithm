@@ -13,13 +13,13 @@ double abs_scalar(MatrixBase<Derived>& U, MatrixBase<OtherDerived>& V, long int 
 	if( rank == 1){
 		return 0;
 	} else{
-		double prod = 1;
+		double sum = 0;
 		for (long int i=0; i < (rank-1);  i++ ){
 
-			prod = abs(prod*(U.col(i).transpose()*U.col(rank-1))(0,0)*(V.row(rank-1)*V.row(i).transpose())(0,0));
+			sum = sum + abs(prod*(U.col(i).transpose()*U.col(rank-1))(0,0)*(V.row(rank-1)*V.row(i).transpose())(0,0));
 
 		}
-		return(2*prod);
+		return(2*sum);
 	}
 }
 
