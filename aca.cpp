@@ -16,7 +16,7 @@ double abs_scalar(MatrixBase<Derived>& U, MatrixBase<OtherDerived>& V, long int 
 		double sum = 0;
 		for (long int i=0; i < (rank-1);  i++ ){
 
-			sum = sum + abs(prod*(U.col(i).transpose()*U.col(rank-1))(0,0)*(V.row(rank-1)*V.row(i).transpose())(0,0));
+			sum = sum + abs((U.col(i).transpose()*U.col(rank-1))(0,0)*(V.row(rank-1)*V.row(i).transpose())(0,0));
 
 		}
 		return(2*sum);
