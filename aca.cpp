@@ -5,9 +5,6 @@
 using namespace std;
 using namespace Eigen;
 
-#define max_row 100
-#define max_col 10
-
 template<typename Derived, typename OtherDerived>
 double abs_scalar(MatrixBase<Derived>& U, MatrixBase<OtherDerived>& V, long int rank){
 	if( rank == 1){
@@ -15,7 +12,9 @@ double abs_scalar(MatrixBase<Derived>& U, MatrixBase<OtherDerived>& V, long int 
 	} else{
 		double sum = 0;
 		for (long int i=0; i < (rank-1);  i++ ){
+
 			sum = sum + abs((U.col(i).transpose()*U.col(rank-1))(0,0)*(V.row(rank-1)*V.row(i).transpose())(0,0));
+
 		}
 		return(2*sum);
 	}
@@ -62,18 +61,29 @@ long int max_index(const MatrixBase<Derived>& M, const MatrixBase<OtherDerived>&
 
 int main(){
 
+	int N;
 	float tol;
+	cout<<"Enter size: "<<endl;
+	cin>>N;
+
 	cout<<"Enter tolerance: "<<endl;
 	cin>>tol;
 
+	int max_row = N;
+	int max_col = N;
+
+
 	MatrixXd Z(max_row, max_col);
+
 	//Intializing Z
+	MatrixXd a = MatrixXd::Random(N,1);
+	a = 2*a - MatrixXd::Constant(N,1,-1);
+	MatrixXd r = a*MatrixXd::Constant(1,N,1)-MatrixXd::Constant(N,1,1)*a.transpose();
+
 	cout<<"Enter the matrix entries:"<<endl;
 	for(int x=0; x<max_row; x++){
 		for(int y=0; y<max_col; y++){
-			cout<<"Z("<<x<<","<<y<<"):"<<endl;
-			cin>>Z(x,y);
-			cout<<endl;
+		Z(x,y) = 1/(1+abs(r(x,y)*r(x,y)));
 		}
 	}
 
@@ -99,7 +109,6 @@ int main(){
 	while(abs(epsilon) >tol && k<max_row && k<max_col){
 	
 		cout<<endl<<"Beginning iteration: "<<(k+1)<<endl;
-
 		I.conservativeResize(k+1);
 		//Setting index as -2 to avoid random assignments due to resize
 		I(k) = -2;
@@ -147,13 +156,13 @@ int main(){
 				break;
 			}
 
-			V.conservativeResize(k+1,max_col);	
-				V.row(k)= R.row(I(k))/R(I(k),J(k));
-					R.col(J(k)) = Z.col(J(k));
-					for(int d=0;d<k;d++){
-						R.col(J(k)) = R.col(J(k)) - V(d,J(k))*U.col(d);
-					}
-			}
+		V.conservativeResize(k+1,max_col);	
+			V.row(k)= R.row(I(k))/R(I(k),J(k));
+				R.col(J(k)) = Z.col(J(k));
+				for(int d=0;d<k;d++){
+					R.col(J(k)) = R.col(J(k)) - V(d,J(k))*U.col(d);
+				}
+		}
 		
 		U.conservativeResize(max_row,k+1);
 		U.col(k) = R.col(J(k));
@@ -163,11 +172,9 @@ int main(){
 		epsilon = (U.col(k).norm()*V.row(k).norm())/sqrt(z);
 		cout<<endl<<"epsilon= "<<epsilon<<endl;
 		cout<<endl<<"Ending iteration: "<<(k+1)<<endl;
-	
 		k++;
 	}
-
-	cout<<endl<<"U:"<<endl<<U<<endl<<"V:"<<endl<<V<<endl;
+	
 	cout<<endl<<"U*V"<<endl<<U*V<<endl;
 	cout<<endl<<endl<<"rank of the matrix:"<<endl<<k<<endl;	
 	cout<<endl<<"I:"<<endl<<I<<endl<<endl<<"J:"<<endl<<J<<endl;
