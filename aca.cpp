@@ -5,7 +5,7 @@
 using namespace std;
 using namespace Eigen;
 
-#define max_row 100
+#define max_row 5
 #define max_col 10
 
 template<typename Derived, typename OtherDerived>
