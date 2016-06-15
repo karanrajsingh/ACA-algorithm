@@ -116,7 +116,7 @@ int main(){
 		if(J.size() == 0){
 			I(k) = k;
 		}else{
-			I(k) = max_index(R.col(J(k-1)), I, A, max_row);
+			I(k) = max_index(R.col(J(k-1)), I, D, max_row);
 		}
 		if(I(k) == -1){ 
 			break;	
